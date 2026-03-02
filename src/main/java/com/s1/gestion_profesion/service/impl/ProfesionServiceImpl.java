@@ -9,59 +9,66 @@ import com.s1.gestion_profesion.service.ProfesionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProfesionServiceImpl implements ProfesionService {
-    private final ProfesionMapper profesionMapper;
+    
     private final ProfesionRepository profesionRepository;
-
+    private final ProfesionMapper profesionMapper;
+    
     @Override
     public ProfesionResponseDTO guardarProfesion(ProfesionRequestDTO dto) {
-        Profesion p=profesionMapper.DTOAEntidad(dto);
-        Profesion p_insertada=profesionRepository.save(p);
-        return profesionMapper.entidadADTO(p_insertada);
+        if (profesionRepository.existsByNombreIgnoreCase(dto.nombre())) {
+            throw new RuntimeException("Ya existe una profesión con ese nombre");
+        }
+        
+        Profesion profesion = new Profesion();
+        profesion.setNombre(dto.nombre());
+        profesion.setDescripcion(dto.descripcion());
+        
+        Profesion profesionGuardada = profesionRepository.save(profesion);
+        return profesionMapper.entidadADTO(profesionGuardada);
     }
-
+    
     @Override
     public ProfesionResponseDTO actualizarProfesion(ProfesionRequestDTO dto, Long id) {
-        Profesion p=profesionRepository.findById(id).orElseThrow(()->new RuntimeException("No existe dicha profesion a actualizar"));
-        profesionMapper.actualizarEntidadDesdeDTO(p,dto);
-        Profesion p_actualizada=profesionRepository.save(p);
-        return profesionMapper.entidadADTO(p_actualizada);
+        Profesion profesion = profesionRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Profesión no encontrada"));
+        
+        profesion.setNombre(dto.nombre());
+        profesion.setDescripcion(dto.descripcion());
+        
+        Profesion profesionActualizada = profesionRepository.save(profesion);
+        return profesionMapper.entidadADTO(profesionActualizada);
     }
-
-    @Override
-    public void eliminarProfesion(Long id) {
-        Profesion p=profesionRepository.findById(id).orElseThrow(()->new RuntimeException("No existe dicha profesion a eliminar"));
-        profesionRepository.delete(p);
-    }
-    @Override
-    public List<ProfesionResponseDTO> buscarTodos() {
-        List<Profesion> profesiones=profesionRepository.findAll();
-        return profesiones.stream().map(profesionMapper::entidadADTO).toList();
-    }
-
-    @Override
-    public List<ProfesionResponseDTO> buscarNombre(String nombre) {
-        List<Profesion> profesiones=profesionRepository.findByNombreIgnoreCase(nombre);
-        return profesiones.stream().map(profesionMapper::entidadADTO).toList();
-    }
-
-    @Override
-    public boolean buscarExisteNombre(String nombre) {
-        return profesionRepository.existsByName(nombre);
-    }
-
-    @Override
-    public Long contarNombreRepetidos(String nombre) {
-        return profesionRepository.countByName(nombre);
-    }
-
+    
     @Override
     public ProfesionResponseDTO buscarPorId(Long id) {
-        Profesion p=profesionRepository.findById(id).orElseThrow(()->new RuntimeException("No existe dicha profesion"));
-        return profesionMapper.entidadADTO(p);
+        Profesion profesion = profesionRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Profesión no encontrada"));
+        return profesionMapper.entidadADTO(profesion);
+    }
+    
+    @Override
+    public List<ProfesionResponseDTO> listarProfesiones() {
+        return profesionRepository.findAll().stream()
+            .map(profesionMapper::entidadADTO)
+            .collect(Collectors.toList());
+    }
+    
+    @Override
+    public List<ProfesionResponseDTO> buscarPorNombre(String nombre) {
+        return profesionRepository.findByNombreIgnoreCase(nombre)
+            .map(p -> List.of(profesionMapper.entidadADTO(p)))
+            .orElse(List.of());
+    }
+    
+    @Override
+    public void eliminarProfesion(Long id) {
+        Profesion profesion = profesionRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Profesión no encontrada"));
+        profesionRepository.delete(profesion);
     }
 }
