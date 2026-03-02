@@ -29,12 +29,12 @@ public class DetalleVenta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    // Relación N:1 con Venta
+    
     @ManyToOne
     @JoinColumn(name = "venta_id", nullable = false)
     private Venta venta;
     
-    // Relación N:1 con Producto
+   
     @ManyToOne
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;

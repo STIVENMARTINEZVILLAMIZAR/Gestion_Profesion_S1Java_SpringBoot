@@ -1,4 +1,4 @@
-package com.s1.gestion_profesion.service.impl;
+package com.s1.gestion_profesion.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,7 +10,6 @@ import com.s1.gestion_profesion.dto.response.ProductoResponseDTO;
 import com.s1.gestion_profesion.mapper.ProductoMapper;
 import com.s1.gestion_profesion.model.Producto;
 import com.s1.gestion_profesion.repository.ProductoRepository;
-import com.s1.gestion_profesion.service.ProductoService;
 
 import lombok.RequiredArgsConstructor;
 
