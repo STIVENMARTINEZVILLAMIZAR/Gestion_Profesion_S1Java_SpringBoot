@@ -1,5 +1,6 @@
 package com.s1.gestion_profesion.dto.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -10,10 +11,13 @@ import jakarta.validation.constraints.Size;
  * unicamente en transferencia y obtención de datos.
  * */
 
+@Schema(name = "ProfesionRequestDTO", description = "Datos para crear o actualizar una profesion")
 public record ProfesionRequestDTO(
+        @Schema(description = "Nombre de la profesion", example = "Ingeniero de Sistemas")
         @NotBlank(message = "El nombre no puede estar vacio.")
         @Size(min = 2, max = 50, message = "Error, el rango del nombre debe estar entre 2 y 50 caracteres")
         String nombre,
+        @Schema(description = "Descripcion de la profesion", example = "Profesional en desarrollo de software")
         @NotBlank(message = "El nombre no puede estar vacio.")
         @Size(min = 2, max = 50, message = "Error, el rango del nombre debe estar entre 2 y 50 caracteres")
         String descripcion
