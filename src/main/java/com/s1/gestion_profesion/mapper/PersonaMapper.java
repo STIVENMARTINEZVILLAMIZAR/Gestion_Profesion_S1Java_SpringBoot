@@ -8,21 +8,31 @@ import org.springframework.stereotype.Component;
 @Component
 public class PersonaMapper {
     
-    // Convierte DTO a Entidad (para guardar en BD)
+    private final ProfesionMapper profesionMapper;
+    
+    public PersonaMapper(ProfesionMapper profesionMapper) {
+        this.profesionMapper = profesionMapper;
+    }
+    
     public Persona dtoAEntidad(PersonaRequestDTO dto) {
         Persona persona = new Persona();
+        persona.setDocumento(dto.documento());
         persona.setNombre(dto.nombre());
         persona.setApellido(dto.apellido());
+        persona.setEdad(dto.edad());
+        persona.setSalario(dto.salario());
         return persona;
     }
     
-    // Convierte Entidad a DTO (para devolver al cliente)
     public PersonaResponseDTO entidadADTO(Persona persona) {
         return new PersonaResponseDTO(
             persona.getId(),
+            persona.getDocumento(),
             persona.getNombre(),
             persona.getApellido(),
-            persona.getCreatedAt()
+            persona.getEdad(),
+            persona.getSalario(),
+            profesionMapper.entidadADTO(persona.getProfesion())
         );
     }
 }
