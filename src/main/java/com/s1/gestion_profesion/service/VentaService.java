@@ -11,4 +11,4 @@ public interface VentaService {
     List<VentaResponseDTO> listarVentas();
     void eliminarVenta(Long id);
     VentaResponseDTO cambiarEstado(Long id, String nuevoEstado);
-}find /home/camper/Documentos/gestion_profesion/src/main/java -type f -name "*.java" | sort
+}
