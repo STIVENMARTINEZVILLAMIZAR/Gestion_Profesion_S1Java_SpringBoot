@@ -61,8 +61,8 @@ jwt.expiration=3600000
 mvn clean compile
 mvn spring-boot:run
 ```
-Swagger UI: `http://localhost:8080/swagger-ui.html`  
-OpenAPI JSON: `http://localhost:8080/v3/api-docs`
+Swagger UI: `http://localhost:8081/swagger-ui.html`  
+OpenAPI JSON: `http://localhost:8081/v3/api-docs`
 
 ## Validaciones clave
 - Producto: nombre único, precio > 0, stock ≥ 1.
